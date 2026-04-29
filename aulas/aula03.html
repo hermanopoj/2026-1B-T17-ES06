@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1280, initial-scale=1.0" />
+  <title>Instrução 03, Projeto de Software Orientado a Objetos: Entidades, Propriedades e UML, Inteli T17</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" id="theme" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/monokai.min.css" />
+
+  <link rel="stylesheet" href="assets/css/inteli-theme.css" />
+  <link rel="stylesheet" href="assets/css/inteli-print.css" />
+
+  <style>
+    /* ── Layouts locais da Instrução 03 ──────────────────────────────── */
+
+    /* Grid 2 colunas comparativo genérico */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 10px;
+    }
+    .compare-col {
+      background: var(--inteli-bg-soft);
+      border-radius: 10px;
+      padding: 12px 16px;
+      border-top: 3px solid var(--inteli-lilac);
+    }
+    .compare-col.coral { border-top-color: var(--inteli-coral); }
+    .compare-col.green { border-top-color: var(--inteli-dark-green); }
+    .compare-col h4 {
+      font-size: 0.88em;
+      color: var(--inteli-purple-deep);
+      margin: 0 0 6px 0;
+    }
+    .compare-col ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 0.66em;
+      line-height: 1.5;
+    }
+    .compare-col li { margin-bottom: 3px; }
+
+    /* Grid 3 cards */
+    .three-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .three-cards .card {
+      background: var(--inteli-bg-soft);
+      border-radius: 10px;
+      padding: 12px 16px;
+      border-left: 3px solid var(--inteli-coral);
+    }
+    .three-cards .card h4 {
+      font-size: 0.82em;
+      margin: 0 0 4px 0;
+      color: var(--inteli-purple-deep);
+    }
+    .three-cards .card p {
+      font-size: 0.66em;
+      margin: 0;
+      line-height: 1.45;
+    }
+
+    /* Grid 4 cards */
+    .four-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .four-cards .card {
+      background: var(--inteli-bg-soft);
+      border-radius: 10px;
+      padding: 10px 14px;
+      border-left: 3px solid var(--inteli-lilac);
+    }
+    .four-cards .card h4 {
+      font-size: 0.78em;
+      margin: 0 0 2px 0;
+      color: var(--inteli-purple-deep);
+    }
+    .four-cards .card .tag {
+      font-size: 0.55em;
+      color: var(--inteli-gray-dark);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .four-cards .card p {
+      font-size: 0.62em;
+      margin: 0;
+      line-height: 1.35;
+    }
+
+    /* Checklist 5 cards */
+    .checklist-5 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .checklist-5 .card {
+      background: var(--inteli-bg-soft);
+      border-radius: 10px;
+      padding: 10px 12px;
+      border-left: 3px solid var(--inteli-coral);
+    }
+    .checklist-5 .card h4 { font-size: 0.72em; margin: 0 0 2px 0; }
+    .checklist-5 .card p  { font-size: 0.58em; margin: 0; line-height: 1.3; }
+
+    /* Exercise compact */
+    .exercise-slide.compact { padding: 40px 60px 36px 60px; }
+    .exercise-slide.compact h2 { font-size: 1.35em; margin: 0 0 8px 0; }
+    .exercise-slide.compact .exercise-tag { margin-bottom: 8px; }
+    .exercise-slide.compact .exercise-steps li {
+      padding: 7px 10px 7px 46px;
+      margin-bottom: 5px;
+      font-size: 0.66em;
+      line-height: 1.45;
+    }
+    .exercise-slide.compact .exercise-steps li::before {
+      width: 24px; height: 24px;
+      top: 7px; left: 12px;
+      font-size: 0.8em;
+    }
+    .hint-caption {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.63em;
+      font-style: italic;
+      margin-top: 8px;
+    }
+
+    /* Bloco código + anotação lateral */
+    .code-annot {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 12px;
+      margin-top: 6px;
+    }
+    .code-annot pre {
+      margin: 0;
+      font-size: 0.52em;
+      line-height: 1.42;
+      padding: 12px 14px;
+    }
+    .code-annot .annot {
+      background: var(--inteli-bg-soft);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.6em;
+      line-height: 1.45;
+    }
+    .code-annot .annot ol {
+      margin: 0;
+      padding-left: 18px;
+    }
+    .code-annot .annot li { margin-bottom: 3px; }
+    .code-annot .annot strong { color: var(--inteli-coral); }
+
+    /* ── UML Class Box ─────────────────────────────────────────────── */
+    .uml-class {
+      border: 2px solid var(--inteli-purple-deep);
+      border-radius: 6px;
+      overflow: hidden;
+      font-size: 0.62em;
+      font-family: var(--inteli-mono, 'Space Mono', monospace);
+      background: white;
+      min-width: 160px;
+    }
+    .uml-class .uml-name {
+      background: var(--inteli-purple-deep);
+      color: white;
+      padding: 5px 10px;
+      font-weight: 700;
+      font-size: 1em;
+      text-align: center;
+      letter-spacing: 0.03em;
+    }
+    .uml-class .uml-name .uml-stereotype {
+      font-size: 0.78em;
+      font-weight: 400;
+      display: block;
+      opacity: 0.8;
+      font-style: italic;
+    }
+    .uml-class .uml-attrs,
+    .uml-class .uml-methods {
+      padding: 6px 10px;
+      border-top: 1px solid #ddd;
+      line-height: 1.6;
+    }
+    .uml-class .uml-attrs { color: #333; }
+    .uml-class .uml-methods { color: #1a4a8a; }
+    .uml-class .vis-pub  { color: var(--inteli-dark-green); font-weight: 700; }
+    .uml-class .vis-priv { color: var(--inteli-coral);      font-weight: 700; }
+    .uml-class .vis-prot { color: #d4860d;                  font-weight: 700; }
+
+    /* Grid de classes UML */
+    .uml-grid {
+      display: flex;
+      gap: 14px;
+      margin-top: 10px;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .uml-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .uml-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    /* Relações UML */
+    .uml-relation {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.65em;
+      margin: 4px 0;
+      font-family: var(--inteli-mono, 'Space Mono', monospace);
+    }
+    .uml-relation .arrow { font-size: 1.2em; color: var(--inteli-purple-deep); }
+    .uml-relation .label { color: var(--inteli-gray-dark); font-style: italic; }
+    .uml-relation .classes { color: var(--inteli-purple-deep); font-weight: 600; }
+
+    /* Contexto bounded box */
+    .context-box {
+      border: 2px dashed var(--inteli-lilac);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: rgba(160,130,220,0.05);
+    }
+    .context-box .context-label {
+      font-size: 0.62em;
+      font-weight: 700;
+      color: var(--inteli-lilac);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .context-box.coral-ctx {
+      border-color: var(--inteli-coral);
+      background: rgba(255,100,80,0.04);
+    }
+    .context-box.coral-ctx .context-label { color: var(--inteli-coral); }
+    .context-box.green-ctx {
+      border-color: var(--inteli-dark-green);
+      background: rgba(30,120,70,0.04);
+    }
+    .context-box.green-ctx .context-label { color: var(--inteli-dark-green); }
+    .context-box.blue-ctx {
+      border-color: var(--inteli-purple-deep);
+      background: rgba(30,50,140,0.04);
+    }
+    .context-box.blue-ctx .context-label { color: var(--inteli-purple-deep); }
+
+    /* Tabela de tipos de relacionamento */
+    .rel-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.64em;
+      margin-top: 8px;
+    }
+    .rel-table th {
+      background: var(--inteli-purple-deep);
+      color: white;
+      padding: 6px 10px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .rel-table td {
+      padding: 6px 10px;
+      border-bottom: 1px solid #e0e0e0;
+      vertical-align: top;
+      line-height: 1.4;
+    }
+    .rel-table tr:nth-child(even) td { background: var(--inteli-bg-soft); }
+    .rel-table code {
+      font-size: 0.88em;
+      background: #f0f0f0;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-family: var(--inteli-mono, 'Space Mono', monospace);
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-block;
+      padding: 1px 7px;
+      border-radius: 20px;
+      font-size: 0.82em;
+      font-weight: 700;
+    }
+    .badge.assoc  { background: #d4edda; color: #155724; }
+    .badge.comp   { background: #d1ecf1; color: #0c5460; }
+    .badge.agg    { background: #fff3cd; color: #856404; }
+    .badge.inh    { background: #f8d7da; color: #721c24; }
+
+    /* Entidade highlight */
+    .entity-pill {
+      display: inline-block;
+      background: var(--inteli-purple-deep);
+      color: white;
+      border-radius: 20px;
+      padding: 2px 12px;
+      font-size: 0.72em;
+      font-family: var(--inteli-mono, 'Space Mono', monospace);
+      font-weight: 700;
+      margin: 2px 3px;
+    }
+    .entity-pill.coral { background: var(--inteli-coral); }
+    .entity-pill.green { background: var(--inteli-dark-green); }
+    .entity-pill.lilac { background: var(--inteli-lilac); }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 01 · Capa ─────────────────────────────────────────────── -->
+      <section class="cover-slide">
+        <div class="top-bar"></div>
+        <div class="cover-content">
+          <span class="sprint-tag">Sprint 1</span>
+          <h1>Projeto de Software Orientado a Objetos</h1>
+          <div class="cover-meta">
+            <strong>Instrução</strong><span>03 de 14</span>
+            <strong>Data</strong><span>28 de abril de 2026 · 14h00 às 16h00</span>
+            <strong>Professor</strong><span>Hermano Peixoto</span>
+            <strong>Módulo</strong><span>06 · Engenharia de Software · Turma 17</span>
+          </div>
+        </div>
+        <span class="cover-branding inteli-wordmark">inteli</span>
+      </section>
+
+      <!-- 02 · Agenda ─────────────────────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda da instrução</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.72em; margin: 0 0 10px;">Vocês assistiram ao vídeo sobre classes e objetos, leram sobre propriedades e métodos no DevMedia, exploraram separação de contextos na DIO e leram sobre diagramas UML no Lucidchart. A instrução conecta esses insumos e termina com vocês construindo um diagrama UML real para o Portal Aventura.</p>
+          <table>
+            <thead>
+              <tr><th style="width: 28%;">Bloco</th><th style="width: 52%;">Atividade</th><th style="width: 20%;">Duração</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>14h00 · Daily</td><td>Stand-up do grupo: o que cada um fez, o que vai fazer, impedimentos</td><td>15 min</td></tr>
+              <tr><td>14h15 · Bloco 1</td><td>Entidades, classes, propriedades, métodos e encapsulamento</td><td>30 min</td></tr>
+              <tr><td>14h45 · Bloco 2</td><td>Separação de contextos e diagrama UML de classes: notação e relacionamentos</td><td>25 min</td></tr>
+              <tr><td>15h10 · Dinâmica</td><td>Mapeamento UML do Portal Aventura: do TAPI ao diagrama de classes</td><td>40 min</td></tr>
+              <tr><td>15h50 · Fechamento</td><td>Quiz e checklist</td><td>10 min</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 03 · Projeto de Software Orientado a Objetos · Sprint 1</div>
+          <div class="footer-page">02</div>
+        </div>
+      </section>
+
+      <!-- 03, Daily Time -->
+      <section class="daily-slide">
+        <span class="daily-tag">Daily, 15 min</span>
+        <h2>Daily Time</h2>
+        <p class="daily-subtitle">
+          Alinhamento rápido de cada grupo: o que avançou desde a última aula, o que trava e qual é a próxima meta.
+        </p>
+        <div class="inteli-timer" data-minutes="15">
+          <div class="inteli-timer-display">15:00</div>
+          <div class="inteli-timer-controls">
+            <button data-action="start">Iniciar</button>
+            <button data-action="pause">Pausar</button>
+            <button data-action="reset">Zerar</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 · Objetivos ─────────────────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Objetivos de aprendizagem</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.72em; margin: 0 0 8px;">No fim da instrução, cada grupo sai com um diagrama inicial de classes UML do Portal Aventura e com as decisões de modelagem documentadas.</p>
+          <p style="font-size: 0.72em; margin: 0 0 8px;">Quatro verbos, quatro entregas concretas:</p>
+          <div class="concept-cards">
+            <div class="concept-card">
+              <h4>Identificar</h4>
+              <p>Reconhecer entidades, atributos e métodos em uma descrição de domínio real, distinguindo o que é estado (o que o objeto é) do que é comportamento (o que o objeto faz).</p>
+            </div>
+            <div class="concept-card">
+              <h4>Separar</h4>
+              <p>Dividir o sistema em contextos coesos com responsabilidades bem definidas, aplicando o princípio da responsabilidade única como critério de agrupamento das classes.</p>
+            </div>
+            <div class="concept-card">
+              <h4>Modelar</h4>
+              <p>Construir um diagrama UML de classes com atributos tipados, métodos assinados e relacionamentos corretos: associação, composição, agregação e herança.</p>
+            </div>
+            <div class="concept-card">
+              <h4>Justificar</h4>
+              <p>Defender as escolhas de modelagem em função das regras de negócio do Portal Aventura, explicando por que determinada relação é composição e não agregação, por exemplo.</p>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 03 · Projeto de Software Orientado a Objetos · Sprint 1</div>
+          <div class="footer-page">03</div>
+        </div>
+      </section>
+
+      <!-- 05 · Ponte com autoestudos ─────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O que os autoestudos trouxeram para hoje</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.72em; margin: 0 0 8px;">Quatro materiais, quatro camadas. Cada um cobre um ângulo que a instrução vai pressupor como lido. Se você pulou algum, este slide é o resumo de emergência.</p>
+          <div class="four-cards">
+            <div class="card">
+              <span class="tag">Vídeo · YouTube</span>
+              <h4>Classes e objetos</h4>
+              <p>Classe como molde, objeto como instância. Atributos definem o estado; métodos definem o comportamento. A analogia com o mundo real é o ponto de entrada para entender POO.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-coral);">
+              <span class="tag">Artigo · DevMedia</span>
+              <h4>Propriedades e métodos</h4>
+              <p>Encapsulamento na prática: visibilidade (public, private, protected), getters e setters, controle de acesso ao estado interno do objeto. O porquê de não expor tudo como público.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-dark-green);">
+              <span class="tag">Artigo · DIO</span>
+              <h4>Separação de contextos</h4>
+              <p>Alta coesão dentro do módulo, baixo acoplamento entre módulos. Cada classe tem uma razão para mudar. Quando um sistema começa a ficar difícil de manter, geralmente é porque os contextos estão misturados.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-purple-deep);">
+              <span class="tag">Guia · Lucidchart</span>
+              <h4>Diagrama UML de classes</h4>
+              <p>Notação padrão: retângulo com três compartimentos (nome, atributos, métodos), símbolos de visibilidade, linhas de relacionamento com multiplicidade. A linguagem visual que toda equipe de software usa.</p>
+            </div>
+          </div>
+          <div class="callout" style="margin-top: 10px; padding: 8px 14px;">
+            <h4 style="margin: 0 0 2px;">Pergunta de partida</h4>
+            <p style="font-size: 0.66em; margin: 0; line-height: 1.4;">O Portal Aventura precisa recomendar espetáculos para usuários. Quais "coisas" do mundo real precisam existir como entidades no sistema para que essa recomendação seja possível? A dinâmica de hoje começa exatamente com essa pergunta.</p>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 03 · Projeto de Software Orientado a Objetos · Sprint 1</div>
+          <div class="footer-page">04</div>
+        </div>
+      </section>
+
+      <!-- 06 · Separador Bloco 1 ──────────────────────────────────── -->
+      <section class="section-slide">
+        <span class="section-number">Bloco 1 · 14h15 · 30 min</span>
+        <h2>Entidades, classes e propriedades</h2>
+        <p class="section-description">Como o mundo real se torna código estruturado? O que define uma entidade? O que ela sabe sobre si mesma e o que ela sabe fazer?</p>
+      </section>
+
+      <!-- 07 · O que é uma entidade ──────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Entidades: as "coisas" que o sistema precisa conhecer</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.72em; margin: 0 0 8px;">Uma entidade é qualquer elemento do domínio que tem <strong>identidade própria</strong>, <strong>estado observável</strong> e <strong>comportamento relevante</strong> para o sistema. No código OO, cada entidade vira uma classe.</p>
+          <div class="compare-grid">
+            <div class="compare-col coral">
+              <h4>📌 Como identificar uma entidade</h4>
+              <ul>
+                <li>É uma "coisa" sobre a qual o sistema precisa guardar informação?</li>
+                <li>Tem atributos que a distinguem de outras do mesmo tipo?</li>
+                <li>Tem comportamentos que só ela executa?</li>
+                <li>Existe independentemente de outras entidades?</li>
+                <li>Aparece como substantivo na descrição do problema?</li>
+              </ul>
+            </div>
+            <div class="compare-col green">
+              <h4>🎭 Entidades do Portal Aventura</h4>
+              <ul>
+                <li><strong>Espetáculo</strong> — tem nome, gênero, elenco, duração</li>
+                <li><strong>Usuário</strong> — tem perfil, histórico, preferências</li>
+                <li><strong>Teatro</strong> — tem nome, endereço, capacidade</li>
+                <li><strong>Sessão</strong> — liga um espetáculo a um teatro em uma data</li>
+                <li><strong>Ingresso</strong> — representa a compra de acesso a uma sessão</li>
+                <li><strong>Recomendação</strong> — resultado do algoritmo para um usuário</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout" style="margin-top: 10px; padding: 8px 14px;">
+            <h4 style="margin: 0 0 2px;">Entidade ≠ tabela de banco de dados</h4>
+            <p style="font-size: 0.66em; margin: 0; line-height: 1.4;">Um erro comum é confundir entidade OO com tabela relacional. Em OO, uma entidade pode conter listas, objetos embutidos e comportamento. Em SQL, a estrutura é normalizada em linhas e colunas. O diagrama UML descreve o domínio; o modelo relacional descreve o armazenamento. São camadas diferentes do sistema.</p>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 03 · Projeto de Software Orientado a Objetos · Sprint 1</div>
+          <div class="footer-page">05</div>
+        </div>
+      </section>
+
+      <!-- 08 · Atributos e Métodos ────────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Atributos e métodos: o que o objeto É e o que ele FAZ</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.72em; margin: 0 0 6px;">Toda classe tem dois tipos de membros: <strong>atributos</strong> (estado interno — o que o objeto sabe sobre si mesmo) e <strong>métodos</strong> (comportamento — o que o objeto pode fazer ou calcular).</p>
+          <div class="code-annot">
+            <pre><code class="language-python">class Espetaculo:
+    """Representa um espetáculo no catálogo do Portal Aventura."""
+
+    def __init__(self, nome: str, genero: str,
+                 duracao_min: int, sinopse: str):
+        # Atributos: o que o objeto sabe sobre si mesmo
+        self._nome         = nome          # privado: acesso via getter
+        self._genero       = genero
+        self._duracao_min  = duracao_min
+        self._sinopse      = sinopse
+        self._sessoes: list = []           # lista de Sessao
+        self._tags:   list = []            # list[str]
+
+    # --- Getters (encapsulamento) ---
+    @property
+    def nome(self) -> str:
+        return self._nome
+
+    @property
+    def genero(self) -> str:
+        return self._genero
+
+    # --- Métodos: o que o objeto FAZ ---
+    def adicionar_sessao(self, sessao) -> None:
+        """Vincula uma Sessao a este espetáculo."""
+        self._sessoes.append(sessao)
+
+    def calcular_preco_medio(self) -> float:
+        """Retorna a média de preço entre todas as sessões."""
+        if not self._sessoes:
+            return 0.0
+        return sum(s.preco for s in self._sessoes) / len(self._sessoes)
+
+    def obter_tags(self) -> list:
+        """Retorna a lista de tags associadas ao espetáculo."""
+        return list(self._tags)
+
+    def __repr__(self) -> str:
+        return f"Espetaculo({self._nome!r}, {self._genero!r})"</code></pre>
+            <div class="annot">
+              <p style="font-weight: 700; color: var(--inteli-purple-deep); margin: 0 0 6px;">O que observar no código</p>
+              <ol>
+                <li><strong>Atributos com _:</strong> prefixo de convenção Python para indicar acesso restrito. Não é acesso privado de verdade (Python não bloqueia), mas sinaliza que não se deve acessar de fora da classe.</li>
+                <li><strong>@property:</strong> getter que expõe o valor sem permitir escrita direta. Para alterar, usaria <code>@nome.setter</code> com validação.</li>
+                <li><strong>Métodos calculados:</strong> <code>calcular_preco_medio()</code> não armazena o preço médio — calcula quando chamado. Evita inconsistência entre estado armazenado e dados reais.</li>
+                <li><strong>Listas internas:</strong> <code>_sessoes</code> é gerenciada pela própria classe. O método <code>obter_tags()</code> retorna uma cópia para evitar que o chamador modifique a lista original.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 03 · Projeto de Software Orientado a Objetos · Sprint 1</div>
+          <div class="footer-page">06</div>
+        </div>
+      </section>
+
+      <!-- 09 · Encapsulamento ─────────────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Encapsulamento: por que não expor tudo como público</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.72em; margin: 0 0 8px;">Encapsulamento é o princípio de esconder o estado interno de um objeto e controlar como ele é acessado e modificado. Não é sobre segurança — é sobre <strong>manutenibilidade</strong>: quando os detalhes internos mudam, o código externo não quebra.</p>
+          <div class="three-cards">
+            <div class="card">
+              <h4>🔒 Visibilidade em UML</h4>
+              <p><span style="color:var(--inteli-dark-green); font-weight:700;">+ público</span>: qualquer classe pode acessar diretamente.<br><br>
+              <span style="color:var(--inteli-coral); font-weight:700;">- privado</span>: somente a própria classe acessa.<br><br>
+              <span style="color:#d4860d; font-weight:700;"># protegido</span>: a classe e suas subclasses acessam.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-lilac);">
+              <h4>⚠️ O problema de tudo público</h4>
+              <p>Se qualquer código pode alterar <code>espetaculo.preco = -50</code> diretamente, não há validação possível. Com encapsulamento, o setter garante: <code>if preco &lt; 0: raise ValueError</code>. O contrato da classe é preservado.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-dark-green);">
+              <h4>🎭 Exemplo: Usuario no Portal</h4>
+              <p><code>_historico</code> é privado. Só o método <code>registrar_visualizacao()</code> o atualiza, com validação de duplicata e timestamp automático. Código externo nunca manipula a lista diretamente, garantindo consistência.</p>
+            </div>
+          </div>
+          <div class="callout" style="margin-top: 10px; padding: 8px 14px;">
+            <h4 style="margin: 0 0 2px;">Regra prática para modelagem</h4>
+            <p style="font-size: 0.66em; margin: 0; line-height: 1.4;">Comece com tudo privado (<code>-</code> em UML). Torne público apenas o que outros precisam acessar, e apenas através de métodos com intenção clara. Se você está expondo um atributo diretamente, pergunte: "esse acesso pertence à interface pública desta classe ou é um detalhe de implementação?"</p>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 03 · Projeto de Software Orientado a Objetos · Sprint 1</div>
+          <div class="footer-page">07</div>
+        </div>
+      </section>
+
+      <!-- 10 · Separador Bloco 2 ──────────────────────────────────── -->
+      <section class="section-slide">
+        <span class="section-number">Bloco 2 · 14h45 · 25 min</span>
+        <h2>Separação de contextos e diagramas UML de classes</h2>
+        <p class="section-description">Como organizar classes em grupos coesos? Como representar visualmente a estrutura do sistema e os relacionamentos entre as classes?</p>
+      </section>
+
+      <!-- 11 · Separação de contextos ─────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Separação de contextos: dividindo o sistema por responsabilidade</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.72em; margin: 0 0 8px;">Um sistema bem projetado agrupa classes que "falam do mesmo assunto" e mantém contextos diferentes isolados entre si. Quando a equipe de marketing quer mudar como os espetáculos são exibidos, isso não deve quebrar o algoritmo de recomendação.</p>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 8px;">
+            <div class="context-box">
+              <span class="context-label">🗂 Catálogo</span>
+              <div style="font-size: 0.62em; line-height: 1.5;">
+                <div class="entity-pill" style="font-size: 0.9em;">Espetáculo</div>
+                <div class="entity-pill" style="font-size: 0.9em;">Teatro</div>
+                <div class="entity-pill" style="font-size: 0.9em;">Sessão</div>
+                <div class="entity-pill" style="font-size: 0.9em;">Gênero</div>
+                <div class="entity-pill" style="font-size: 0.9em;">Artista</div>
+                <p style="font-size: 0.9em; margin: 6px 0 0; color: var(--inteli-gray-dark);">Gerencia o que existe e onde. Responde: "quais espetáculos estão em cartaz?"</p>
+              </div>
+            </div>
+            <div class="context-box coral-ctx">
+              <span class="context-label">👤 Usuário</span>
+              <div style="font-size: 0.62em; line-height: 1.5;">
+                <div class="entity-pill coral" style="font-size: 0.9em;">Usuário</div>
+                <div class="entity-pill coral" style="font-size: 0.9em;">Perfil</div>
+                <div class="entity-pill coral" style="font-size: 0.9em;">Histórico</div>
+                <div class="entity-pill coral" style="font-size: 0.9em;">Interesse</div>
+                <p style="font-size: 0.9em; margin: 6px 0 0; color: var(--inteli-gray-dark);">Gerencia quem usa e o que gosta. Responde: "o que este usuário prefere?"</p>
+              </div>
+            </div>
+            <div class="context-box green-ctx">
+              <span class="context-label">🤖 Recomendação</span>
+              <div style="font-size: 0.62em; line-height: 1.5;">
+                <div class="entity-pill green" style="font-size: 0.9em;">Recomendação</div>
+                <div class="entity-pill green" style="font-size: 0.9em;">Algoritmo</div>
+                <div class="entity-pill green" style="font-size: 0.9em;">Pontuação</div>
+                <p style="font-size: 0.9em; margin: 6px 0 0; color: var(--inteli-gray-dark);">Calcula e gera sugestões. Responde: "quais espetáculos recomendar a este usuário?"</p>
+              </div>
+            </div>
+            <div class="context-box blue-ctx">
+              <span class="context-label">💳 Comercial</span>
+              <div style="font-size: 0.62em; line-height: 1.5;">
+                <div class="entity-pill lilac" style="font-size: 0.9em;">Ingresso</div>
+                <div class="entity-pill lilac" style="font-size: 0.9em;">Compra</div>
+                <div class="entity-pill lilac" style="font-size: 0.9em;">Pagamento</div>
+                <p style="font-size: 0.9em; margin: 6px 0 0; color: var(--inteli-gray-dark);">Gerencia a transação. Responde: "como o usuário compra um ingresso?"</p>
+              </div>
+            </div>
+          </div>
+          <div class="callout" style="margin-top: 10px; padding: 8px 14px;">
+            <h4 style="margin: 0 0 2px;">Por que separar? O teste da mudança</h4>
+            <p style="font-size: 0.66em; margin: 0; line-height: 1.4;">Pergunte: "se eu mudar a forma como os ingressos são vendidos, quantas classes precisam mudar?" Se a resposta incluir <code>Espetáculo</code> ou <code>Recomendação</code>, os contextos estão acoplados demais. O objetivo é que uma mudança no contexto Comercial não force alterações no contexto de Catálogo.</p>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 03 · Projeto de Software Orientado a Objetos · Sprint 1</div>
+          <div class="footer-page">08</div>
+        </div>
+      </section>
+
+      <!-- 12 · Notação UML ────────────────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Notação UML de classes: como ler e escrever um diagrama</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.72em; margin: 0 0 8px;">Um diagrama de classes UML tem uma notação padronizada. Ler qualquer diagrama UML no mercado requer conhecer exatamente esses elementos.</p>
+          <div class="code-annot">
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div class="uml-class" style="font-size: 0.72em;">
+                <div class="uml-name">Espetáculo</div>
+                <div class="uml-attrs">
+                  <div><span class="vis-priv">-</span> nome: String</div>
+                  <div><span class="vis-priv">-</span> genero: String</div>
+                  <div><span class="vis-priv">-</span> duracao: Integer</div>
+                  <div><span class="vis-priv">-</span> sinopse: String</div>
+                  <div><span class="vis-priv">-</span> sessoes: List&lt;Sessao&gt;</div>
+                </div>
+                <div class="uml-methods">
+                  <div><span class="vis-pub">+</span> getNome(): String</div>
+                  <div><span class="vis-pub">+</span> adicionarSessao(s: Sessao): void</div>
+                  <div><span class="vis-pub">+</span> calcularPrecoMedio(): Float</div>
+                  <div><span class="vis-pub">+</span> obterTags(): List&lt;String&gt;</div>
+                </div>
+              </div>
+              <p style="font-size: 0.58em; color: var(--inteli-gray-dark); margin: 0; font-style: italic;">↑ exemplo de classe UML completa</p>
+            </div>
+            <div class="annot">
+              <p style="font-weight: 700; color: var(--inteli-purple-deep); margin: 0 0 6px;">Lendo o diagrama</p>
+              <ol>
+                <li><strong>Compartimento 1 (nome):</strong> nome da classe em PascalCase. Interfaces levam <code>«interface»</code>; classes abstratas ficam em <em>itálico</em>.</li>
+                <li><strong>Compartimento 2 (atributos):</strong> formato <code>visibilidade nome: Tipo</code>. O tipo é da linguagem-alvo ou genérico (String, Integer, List).</li>
+                <li><strong>Compartimento 3 (métodos):</strong> formato <code>visibilidade nome(params): ReturnType</code>. <code>void</code> significa que não retorna valor.</li>
+                <li><strong>Visibilidade:</strong> <span style="color:var(--inteli-dark-green); font-weight:700;">+</span> público, <span style="color:var(--inteli-coral); font-weight:700;">-</span> privado, <span style="color:#d4860d; font-weight:700;">#</span> protegido.</li>
+                <li><strong>Multiplicidade:</strong> aparece nas linhas de relacionamento. <code>1..*</code> significa "um ou mais"; <code>0..1</code> significa "zero ou um".</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 03 · Projeto de Software Orientado a Objetos · Sprint 1</div>
+          <div class="footer-page">09</div>
+        </div>
+      </section>
+
+      <!-- 13 · Relacionamentos UML ────────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Relacionamentos UML: como as classes se conectam</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.72em; margin: 0 0 6px;">O tipo de linha que une duas classes em UML comunica a natureza do relacionamento. Essa escolha tem implicações no código e no comportamento do sistema.</p>
+          <table class="rel-table" style="font-size: 0.56em; line-height: 1.2; border-collapse: collapse;">
+            <thead>
+              <tr>
+                <th style="width: 14%; padding: 4px 6px;">Tipo</th>
+                <th style="width: 16%; padding: 4px 6px;">Símbolo UML</th>
+                <th style="width: 24%; padding: 4px 6px;">Significado</th>
+                <th style="width: 22%; padding: 4px 6px;">Exemplo no Portal</th>
+                <th style="width: 24%; padding: 4px 6px;">Em código Python</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 4px 6px;"><span class="badge assoc">Associação</span></td>
+                <td style="padding: 4px 6px;">
+                  <code>A ——→ B</code><br>
+                  <small style="font-size: 0.9em;">linha sólida com seta</small>
+                </td>
+                <td style="padding: 4px 6px;">A usa B; B existe independentemente de A</td>
+                <td style="padding: 4px 6px;">
+                  <code>Recomendação → Espetáculo</code><br>
+                  O espetáculo existe sem a recomendação
+                </td>
+                <td style="padding: 4px 6px;">
+                  <code>self.espetaculo = esp</code><br>
+                  referência armazenada como atributo
+                </td>
+              </tr>
+
+              <tr>
+                <td style="padding: 4px 6px;"><span class="badge agg">Agregação</span></td>
+                <td style="padding: 4px 6px;">
+                  <code>A ◇—— B</code><br>
+                  <small style="font-size: 0.9em;">losango vazio em A</small>
+                </td>
+                <td style="padding: 4px 6px;">A contém B, mas B pode existir sem A</td>
+                <td style="padding: 4px 6px;">
+                  <code>Teatro ◇—— Sessão</code><br>
+                  Sessão pode ser movida de teatro
+                </td>
+                <td style="padding: 4px 6px;">
+                  <code>self.sessoes: list = []</code><br>
+                  lista que pode referenciar objetos externos
+                </td>
+              </tr>
+
+              <tr>
+                <td style="padding: 4px 6px;"><span class="badge comp">Composição</span></td>
+                <td style="padding: 4px 6px;">
+                  <code>A ◆—— B</code><br>
+                  <small style="font-size: 0.9em;">losango cheio em A</small>
+                </td>
+                <td style="padding: 4px 6px;">A contém B; B não existe sem A</td>
+                <td style="padding: 4px 6px;">
+                  <code>Compra ◆—— Ingresso</code><br>
+                  Ingresso nasce e morre com a Compra
+                </td>
+                <td style="padding: 4px 6px;">
+                  <code>self.ingressos = [Ingresso(...)]</code><br>
+                  objetos criados e destruídos junto com o pai
+                </td>
+              </tr>
+
+              <tr>
+                <td style="padding: 4px 6px;"><span class="badge inh">Herança</span></td>
+                <td style="padding: 4px 6px;">
+                  <code>B ——▷ A</code><br>
+                  <small style="font-size: 0.9em;">seta fechada de B para A</small>
+                </td>
+                <td style="padding: 4px 6px;">B é um tipo de A; B herda atributos e métodos de A</td>
+                <td style="padding: 4px 6px;">
+                  <code>EspetáculoInfantil ——▷ Espetáculo</code><br>
+                  adiciona <code>faixaEtaria</code> e <code>duracaoMaxima</code>
+                </td>
+                <td style="padding: 4px 6px;">
+                  <code>class EspetaculoInfantil(Espetaculo):</code>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout" style="margin-top: 8px; padding: 6px 14px;">
+            <p style="font-size: 0.64em; margin: 0; line-height: 1.4;"><strong>Regra rápida para composição vs. agregação:</strong> pergunte "faz sentido este objeto existir fora do contexto do outro?" Se não faz (um Ingresso fora de uma Compra não faz sentido), é composição. Se faz (uma Sessão pode ser desvinculada de um Teatro e vinculada a outro), é agregação.</p>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 03 · Projeto de Software Orientado a Objetos · Sprint 1</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- 14 · Separador Dinâmica ─────────────────────────────────── -->
+      <section class="section-slide">
+        <span class="section-number">Dinâmica · 15h10 · 40 min</span>
+        <h2>Mapeamento UML do Portal Aventura</h2>
+        <p class="section-description">Do TAPI ao diagrama de classes UML</p>
+      </section>
+
+      <!-- 15 · Exercício ──────────────────────────────────────────── -->
+      <section class="exercise-slide compact">
+        <div class="top-bar"></div>
+        <span class="exercise-tag">Dinâmica · em grupo · 40 min</span>
+        <h2>Do TAPI ao diagrama de classes UML</h2>
+        <ol class="exercise-steps">
+          <li><strong><span style="color:var(--inteli-coral);">Releia o TAPI e identifique entidades (10 min):</span></strong> com base na descrição do Portal Aventura, listem de 6 a 8 entidades do domínio. Para cada uma, respondam: o que ela sabe sobre si mesma (atributos) e o que ela faz (métodos)? Escrevam em texto antes de qualquer diagrama.</li>
+          <li><strong><span style="color:var(--inteli-coral);">Separe em contextos (5 min):</span></strong> agrupem as entidades em 2 ou 3 contextos distintos. Cada contexto deve ter uma pergunta de negócio que só ele responde. Escrevam essa pergunta ao lado do contexto.</li>
+          <li><strong><span style="color:var(--inteli-coral);">Construa o diagrama UML (20 min):</span></strong> usando papel, quadro ou ferramenta digital (Lucidchart, draw.io, Mermaid), desenhem o diagrama de classes completo. Para cada relação, escolham explicitamente o tipo: associação, agregação, composição ou herança — e escrevam o porquê ao lado.</li>
+          <li><strong><span style="color:var(--inteli-coral);">Defenda uma decisão (5 min):</span></strong> cada grupo escolhe uma decisão de modelagem que gerou discussão interna e apresenta em 2 minutos: qual era a dúvida, quais opções foram consideradas e por que o grupo escolheu o caminho adotado.</li>
+        </ol>
+        <p class="hint-caption" style="color: rgba(255,255,255,0.75); margin-top: 12px;">Foco: o sistema de recomendação. Priorizem as classes que fazem a recomendação funcionar antes das classes comerciais. Se ficarem em dúvida sobre onde colocar uma classe, perguntem: "em qual contexto ela mudaria com mais frequência?" e a coloquem lá.</p>
+      </section>
+
+      <!-- 16 · Gabarito parcial ───────────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Referência: classes centrais do Portal Aventura</h2>
+        </div>
+
+        <div class="slide-body">
+
+          <div class="uml-grid-3" style="grid-template-columns: repeat(3, minmax(0,1fr)); gap: 6px; margin-top: 4px;">
+
+            <div class="uml-class" style="font-size: 0.60em; min-width: 0; border-width: 1.5px;">
+              <div class="uml-name" style="padding: 3px 6px; line-height: 1.15; font-size: 1.05em;">
+                <span class="uml-stereotype">«Catálogo»</span>Espetáculo
+              </div>
+              <div class="uml-attrs" style="padding: 3px 6px; line-height: 1.25;">
+                <div><span class="vis-priv">-</span> id: String</div>
+                <div><span class="vis-priv">-</span> nome: String</div>
+                <div><span class="vis-priv">-</span> genero: String</div>
+                <div><span class="vis-priv">-</span> duracao: Integer</div>
+                <div><span class="vis-priv">-</span> tags: List&lt;String&gt;</div>
+              </div>
+              <div class="uml-methods" style="padding: 3px 6px; line-height: 1.25;">
+                <div><span class="vis-pub">+</span> calcularPrecoMedio(): Float</div>
+                <div><span class="vis-pub">+</span> buscarSessoes(): List</div>
+                <div><span class="vis-pub">+</span> obterTags(): List</div>
+              </div>
+            </div>
+
+            <div class="uml-class" style="font-size: 0.60em; min-width: 0; border-width: 1.5px;">
+              <div class="uml-name" style="background: var(--inteli-coral); padding: 3px 6px; line-height: 1.15; font-size: 1.05em;">
+                <span class="uml-stereotype">«Usuário»</span>Usuário
+              </div>
+              <div class="uml-attrs" style="padding: 3px 6px; line-height: 1.25;">
+                <div><span class="vis-priv">-</span> id: String</div>
+                <div><span class="vis-priv">-</span> nome: String</div>
+                <div><span class="vis-priv">-</span> email: String</div>
+                <div><span class="vis-priv">-</span> perfil: Perfil</div>
+                <div><span class="vis-priv">-</span> historico: List&lt;Historico&gt;</div>
+              </div>
+              <div class="uml-methods" style="padding: 3px 6px; line-height: 1.25;">
+                <div><span class="vis-pub">+</span> registrarVisualizacao(e): void</div>
+                <div><span class="vis-pub">+</span> obterHistorico(): List</div>
+                <div><span class="vis-pub">+</span> atualizarPerfil(): void</div>
+              </div>
+            </div>
+
+            <div class="uml-class" style="font-size: 0.60em; min-width: 0; border-width: 1.5px;">
+              <div class="uml-name" style="background: var(--inteli-dark-green); padding: 3px 6px; line-height: 1.15; font-size: 1.05em;">
+                <span class="uml-stereotype">«Recomendação»</span>Recomendação
+              </div>
+              <div class="uml-attrs" style="padding: 3px 6px; line-height: 1.25;">
+                <div><span class="vis-priv">-</span> usuario: Usuario</div>
+                <div><span class="vis-priv">-</span> espetaculo: Espetaculo</div>
+                <div><span class="vis-priv">-</span> pontuacao: Float</div>
+                <div><span class="vis-priv">-</span> motivo: String</div>
+                <div><span class="vis-priv">-</span> geradoEm: DateTime</div>
+              </div>
+              <div class="uml-methods" style="padding: 3px 6px; line-height: 1.25;">
+                <div><span class="vis-pub">+</span> gerar(u, catalogo): List</div>
+                <div><span class="vis-pub">+</span> filtrarJaVistos(): List</div>
+                <div><span class="vis-pub">+</span> ordenarPorPontuacao(): List</div>
+              </div>
+            </div>
+
+            <div class="uml-class" style="font-size: 0.60em; min-width: 0; border-width: 1.5px;">
+              <div class="uml-name" style="padding: 3px 6px; line-height: 1.15; font-size: 1.05em;">
+                <span class="uml-stereotype">«Catálogo»</span>Sessão
+              </div>
+              <div class="uml-attrs" style="padding: 3px 6px; line-height: 1.25;">
+                <div><span class="vis-priv">-</span> data: Date</div>
+                <div><span class="vis-priv">-</span> horario: Time</div>
+                <div><span class="vis-priv">-</span> preco: Float</div>
+                <div><span class="vis-priv">-</span> capacidade: Integer</div>
+                <div><span class="vis-priv">-</span> vendidos: Integer</div>
+              </div>
+              <div class="uml-methods" style="padding: 3px 6px; line-height: 1.25;">
+                <div><span class="vis-pub">+</span> verificarDisponib(): Boolean</div>
+                <div><span class="vis-pub">+</span> calcularOcupacao(): Float</div>
+              </div>
+            </div>
+
+            <div class="uml-class" style="font-size: 0.60em; min-width: 0; border-width: 1.5px;">
+              <div class="uml-name" style="background: var(--inteli-coral); padding: 3px 6px; line-height: 1.15; font-size: 1.05em;">
+                <span class="uml-stereotype">«Usuário»</span>Perfil
+              </div>
+              <div class="uml-attrs" style="padding: 3px 6px; line-height: 1.25;">
+                <div><span class="vis-priv">-</span> generosFavoritos: List</div>
+                <div><span class="vis-priv">-</span> interesses: List</div>
+                <div><span class="vis-priv">-</span> faixaEtaria: String</div>
+              </div>
+              <div class="uml-methods" style="padding: 3px 6px; line-height: 1.25;">
+                <div><span class="vis-pub">+</span> atualizarPreferencias(): void</div>
+                <div><span class="vis-pub">+</span> calcularSimilaridade(p): Float</div>
+              </div>
+            </div>
+
+            <div class="uml-class" style="font-size: 0.60em; min-width: 0; border-width: 1.5px;">
+              <div class="uml-name" style="background: var(--inteli-dark-green); padding: 3px 6px; line-height: 1.15; font-size: 1.05em;">
+                <span class="uml-stereotype">«Recomendação»</span>Algoritmo
+              </div>
+              <div class="uml-attrs" style="padding: 3px 6px; line-height: 1.25;">
+                <div><span class="vis-priv">-</span> tipo: String</div>
+                <div><span class="vis-priv">-</span> parametros: Dict</div>
+              </div>
+              <div class="uml-methods" style="padding: 3px 6px; line-height: 1.25;">
+                <div><span class="vis-pub">+</span> calcularPontuacao(u, e): Float</div>
+                <div><span class="vis-pub">+</span> treinar(dados): void</div>
+                <div><span class="vis-pub">+</span> recomendar(u, n): List</div>
+              </div>
+            </div>
+
+          </div>
+
+          <div style="margin-top: 4px; font-size: 0.50em; color: var(--inteli-gray-dark); line-height: 1.25;">
+            Relacionamentos principais: <code>Usuário ◆── Perfil</code> (composição) · <code>Usuário ◆── Histórico</code> (composição) · <code>Recomendação ──→ Usuário</code> (associação) · <code>Recomendação ──→ Espetáculo</code> (associação) · <code>Algoritmo ──→ Recomendação</code> (associação) · <code>Espetáculo ◇── Sessão</code> (agregação)
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 03 · Projeto de Software Orientado a Objetos · Sprint 1</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- 17 · Debrief ────────────────────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Debrief: o que costuma aparecer na primeira modelagem</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.74em; margin: 0 0 8px;">Três padrões que aparecem em todo grupo que modela um domínio real pela primeira vez.</p>
+          <div class="three-cards">
+            <div class="card">
+              <h4>1 · Onde fica a Recomendação?</h4>
+              <p>Grupos frequentemente colocam <code>recomendar()</code> dentro de <code>Usuário</code> ou de <code>Espetáculo</code>. O problema: essas classes ficam acopladas ao algoritmo. A melhor separação é ter um contexto de Recomendação com <code>Algoritmo</code> e <code>Recomendação</code> como classes próprias, que leem dados de Usuário e Catálogo mas não os alteram.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-lilac);">
+              <h4>2 · Composição vs. Agregação</h4>
+              <p>A dúvida mais comum: <code>Sessão</code> é composta de <code>Espetáculo</code> ou associada? Resposta: associação — o espetáculo existe antes da sessão e continua existindo após. Já <code>Compra ◆── Ingresso</code> é composição clara: o ingresso faz sentido apenas como parte da compra. Perguntar "o B existe sem o A?" resolve 90% dos casos.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-dark-green);">
+              <h4>3 · Herança vs. atributo</h4>
+              <p>Criar <code>EspetáculoMusical</code> e <code>EspetáculoInfantil</code> como subclasses parece natural. Mas se a única diferença é um campo <code>tipo: String</code>, herança é overkill — cria rigidez sem ganho real. Prefira herança quando os subtipos têm <strong>comportamentos diferentes</strong>, não apenas dados diferentes.</p>
+            </div>
+          </div>
+          <div class="callout" style="margin-top: 10px; padding: 8px 14px;">
+            <h4 style="margin: 0 0 2px;">O diagrama é uma conversa, não uma verdade absoluta</h4>
+            <p style="font-size: 0.66em; margin: 0; line-height: 1.4;">Dois times podem produzir diagramas diferentes para o mesmo problema, e os dois podem estar certos, dependendo das prioridades do sistema. O que importa é que o diagrama seja <strong>consistente com as regras de negócio</strong>, <strong>compreensível pela equipe</strong> e <strong>orientador das decisões de código</strong>. Um diagrama que ninguém consulta não serve para nada.</p>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 03 · Projeto de Software Orientado a Objetos · Sprint 1</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- 18 · Separador Fechamento ───────────────────────────────── -->
+      <section class="section-slide">
+        <span class="section-number">Fechamento · 15h50 · 10 min</span>
+        <h2>Quiz e checklist</h2>
+      </section>
+
+      <!-- 19 · Quiz 1 ─────────────────────────────────────────────── -->
+      <section class="quiz-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Checagem 1 de 2 · Relacionamentos UML</h2>
+        </div>
+        <div class="quiz-container">
+          <p class="quiz-question">No Portal Aventura, um <strong>Usuário</strong> possui um <strong>Perfil</strong> que armazena suas preferências de gênero e de histórico de navegação. Se o usuário for deletado do sistema, o perfil dele também deve ser removido, pois ele não faz sentido sem o usuário. Qual relacionamento UML representa corretamente essa situação?</p>
+          <ul class="quiz-options">
+            <li data-correct="false">Associação simples (linha sólida com seta), porque Usuário referencia Perfil como atributo</li>
+            <li data-correct="false">Agregação (losango vazio em Usuário), porque Perfil pode existir independentemente em outro contexto</li>
+            <li data-correct="true">Composição (losango cheio em Usuário), porque Perfil não tem existência própria fora do Usuário</li>
+            <li data-correct="false">Herança (seta fechada de Perfil para Usuário), porque Perfil é um tipo especializado de Usuário</li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Exato. Composição significa que o ciclo de vida do Perfil é controlado pelo Usuário. Quando o Usuário é destruído, o Perfil vai junto. Em código: o objeto Perfil é criado dentro do construtor do Usuário e nunca é compartilhado com outros objetos. O losango cheio em UML está sempre no lado do 'todo' (Usuário), apontando para a 'parte' (Perfil)."
+               data-incorrect-msg="Reveja. A pista-chave é 'se o usuário for deletado, o perfil também deve ser removido'. Isso define o ciclo de vida de Perfil como dependente de Usuário — a definição exata de composição. Agregação seria correta se o Perfil pudesse existir e ser reutilizado sem um Usuário específico (por exemplo, um perfil padrão compartilhado por vários usuários).">
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 03 · Projeto de Software Orientado a Objetos · Sprint 1</div>
+          <div class="footer-page">13</div>
+        </div>
+      </section>
+
+      <!-- 20 · Quiz 2 ─────────────────────────────────────────────── -->
+      <section class="quiz-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Checagem 2 de 2 · Separação de contextos</h2>
+        </div>
+        <div class="quiz-container">
+          <p class="quiz-question">A equipe de engenharia colocou o método <code>recomendar(usuario)</code> diretamente na classe <code>Espetáculo</code>. Qual é o principal problema dessa decisão de modelagem?</p>
+          <ul class="quiz-options">
+            <li data-correct="false">O nome do método está errado — deveria ser <code>gerarRecomendacao()</code> para seguir a convenção UML</li>
+            <li data-correct="false">A classe Espetáculo ficou grande demais, com atributos e métodos demais para uma única classe</li>
+            <li data-correct="true">A classe Espetáculo passou a conhecer e depender da classe Usuário, criando acoplamento entre contextos que deveriam ser independentes</li>
+            <li data-correct="false">Não há problema — é válido colocar qualquer método em qualquer classe em OO</li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Correto. O problema é o acoplamento entre contextos. Espetáculo pertence ao contexto de Catálogo e deve saber apenas sobre si mesmo: nome, gênero, sessões. Quando recomendar(usuario) está dentro de Espetáculo, a classe passa a depender do contexto de Usuário (precisa importar Usuário, conhecer seu histórico, suas preferências). Qualquer mudança no modelo de Usuário pode forçar alterações em Espetáculo — exatamente o que a separação de contextos tenta evitar."
+               data-incorrect-msg="Reveja. O tamanho da classe é um sintoma, não a causa. O problema fundamental é de responsabilidade: quem deve saber como recomendar um espetáculo a um usuário? Não é o Espetáculo e nem o Usuário — é o contexto de Recomendação, que existe exatamente para centralizar essa lógica e isolar o Catálogo e o Usuário dessa preocupação."></div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 03 · Projeto de Software Orientado a Objetos · Sprint 1</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- 21 · Checklist ──────────────────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Checklist de hoje: o que um diagrama UML mínimo tem</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.74em; margin: 0 0 8px;">Cinco critérios para avaliar se o diagrama do grupo está pronto:</p>
+          <div class="checklist-5">
+            <div class="card">
+              <h4>1 · Entidades identificadas</h4>
+              <p>Pelo menos 6 classes modeladas com nome significativo em PascalCase, pertinentes ao domínio do Portal Aventura.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-lilac);">
+              <h4>2 · Atributos tipados</h4>
+              <p>Cada classe tem no mínimo 3 atributos com tipo declarado e visibilidade marcada (+, -, #). Sem atributos genéricos sem tipo.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-dark-green);">
+              <h4>3 · Métodos assinados</h4>
+              <p>Cada classe tem pelo menos 2 métodos com parâmetros e tipo de retorno. Métodos nomeados como verbos de ação.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-coral);">
+              <h4>4 · Relacionamentos corretos</h4>
+              <p>Ao menos 3 tipos distintos de relacionamento usados (associação, composição, agregação ou herança) com justificativa documentada para cada escolha.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-purple-deep);">
+              <h4>5 · Contextos separados</h4>
+              <p>Classes agrupadas em ao menos 2 contextos com responsabilidades distintas. Cada contexto responde a uma pergunta de negócio diferente.</p>
+            </div>
+          </div>
+          <div class="callout" style="margin-top: 10px; padding: 8px 14px;">
+            <h4 style="margin: 0 0 2px;">Entrega</h4>
+            <p style="font-size: 0.66em; margin: 0; line-height: 1.4;">Imagem ou link do diagrama UML + documento com a justificativa de pelo menos uma decisão de relacionamento (composição vs. agregação ou herança vs. atributo) + resposta à pergunta: "qual contexto do sistema ficaria mais afetado se os algoritmos de recomendação mudassem e por quê?"</p>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 03 · Projeto de Software Orientado a Objetos · Sprint 1</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- 22 · Encerramento ───────────────────────────────────────── -->
+      <section class="end-slide">
+        <span class="inteli-wordmark light">inteli</span>
+        <h2>Até a próxima</h2>
+        <p>Aula 04 · Sistemas de recomendação baseados em filtragem colaborativa</p>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="assets/js/inteli-quiz.js"></script>
+  <script src="assets/js/inteli-zoom.js"></script>
+  <script src="assets/js/inteli-timer.js"></script>
+  <script src="assets/js/inteli-pdf-export.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: false,
+      width: 1280,
+      height: 720,
+      margin: 0,
+      transition: 'slide',
+      plugins: [RevealHighlight]
+    });
+  </script>
+</body>
+</html>

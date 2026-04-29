@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1280, initial-scale=1.0" />
+  <title>Instrução 02, Filtragem Colaborativa por Usuário, Inteli T17</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" id="theme" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/monokai.min.css" />
+
+  <link rel="stylesheet" href="assets/css/inteli-theme.css" />
+  <link rel="stylesheet" href="assets/css/inteli-print.css" />
+
+  <style>
+    /* ── Layouts locais da Instrução 02 ──────────────────────────────── */
+
+    /* Grid 2 colunas comparativo genérico */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 10px;
+    }
+    .compare-col {
+      background: var(--inteli-bg-soft);
+      border-radius: 10px;
+      padding: 12px 16px;
+      border-top: 3px solid var(--inteli-lilac);
+    }
+    .compare-col.coral { border-top-color: var(--inteli-coral); }
+    .compare-col.green { border-top-color: var(--inteli-dark-green); }
+    .compare-col h4 {
+      font-size: 0.88em;
+      color: var(--inteli-purple-deep);
+      margin: 0 0 6px 0;
+    }
+    .compare-col ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 0.66em;
+      line-height: 1.5;
+    }
+    .compare-col li { margin-bottom: 3px; }
+
+    /* Grid 3 cards */
+    .three-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .three-cards .card {
+      background: var(--inteli-bg-soft);
+      border-radius: 10px;
+      padding: 12px 16px;
+      border-left: 3px solid var(--inteli-coral);
+    }
+    .three-cards .card h4 {
+      font-size: 0.82em;
+      margin: 0 0 4px 0;
+      color: var(--inteli-purple-deep);
+    }
+    .three-cards .card p {
+      font-size: 0.66em;
+      margin: 0;
+      line-height: 1.45;
+    }
+
+    /* Grid 4 cards */
+    .four-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .four-cards .card {
+      background: var(--inteli-bg-soft);
+      border-radius: 10px;
+      padding: 10px 14px;
+      border-left: 3px solid var(--inteli-lilac);
+    }
+    .four-cards .card h4 {
+      font-size: 0.78em;
+      margin: 0 0 2px 0;
+      color: var(--inteli-purple-deep);
+    }
+    .four-cards .card .tag {
+      font-size: 0.55em;
+      color: var(--inteli-gray-dark);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .four-cards .card p {
+      font-size: 0.62em;
+      margin: 0;
+      line-height: 1.35;
+    }
+
+    /* Pipeline stages (linha do tempo horizontal) */
+    .pipeline-stages {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      margin-top: 10px;
+      overflow: hidden;
+      border-radius: 10px;
+    }
+    .stage {
+      flex: 1;
+      background: var(--inteli-bg-soft);
+      padding: 10px 12px;
+      border-right: 2px solid var(--inteli-white);
+      position: relative;
+    }
+    .stage:last-child { border-right: none; }
+    .stage h4 {
+      font-size: 0.72em;
+      margin: 0 0 2px 0;
+      color: var(--inteli-purple-deep);
+    }
+    .stage p {
+      font-size: 0.58em;
+      margin: 0;
+      line-height: 1.35;
+      color: var(--inteli-gray-dark);
+    }
+    .stage .stage-tag {
+      font-size: 0.5em;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--inteli-white);
+      background: var(--inteli-lilac);
+      border-radius: 4px;
+      padding: 1px 6px;
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+    .stage.done   { background: #e8f5ee; }
+    .stage.focus  { background: #fff3d4; }
+
+    /* Bloco código + anotação lateral */
+    .code-annot {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 12px;
+      margin-top: 6px;
+    }
+    .code-annot pre {
+      margin: 0;
+      font-size: 0.52em;
+      line-height: 1.42;
+      padding: 12px 14px;
+    }
+    .code-annot .annot {
+      background: var(--inteli-bg-soft);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.6em;
+      line-height: 1.45;
+    }
+    .code-annot .annot ol {
+      margin: 0;
+      padding-left: 18px;
+    }
+    .code-annot .annot li { margin-bottom: 3px; }
+    .code-annot .annot strong { color: var(--inteli-coral); }
+
+    /* Tabela de similaridade */
+    .sim-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.65em;
+      margin-top: 8px;
+    }
+    .sim-table th {
+      background: var(--inteli-purple-deep);
+      color: white;
+      padding: 6px 10px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .sim-table td {
+      padding: 6px 10px;
+      border-bottom: 1px solid #e0e0e0;
+      vertical-align: top;
+      line-height: 1.4;
+    }
+    .sim-table tr:nth-child(even) td { background: var(--inteli-bg-soft); }
+    .sim-table .badge {
+      display: inline-block;
+      padding: 1px 7px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: 700;
+    }
+    .sim-table .badge.good  { background: #d4edda; color: #155724; }
+    .sim-table .badge.ok    { background: #fff3cd; color: #856404; }
+    .sim-table .badge.limit { background: #f8d7da; color: #721c24; }
+
+    /* Fórmula highlight box */
+    .formula-box {
+      background: var(--inteli-bg-soft);
+      border-left: 4px solid var(--inteli-lilac);
+      border-radius: 8px;
+      padding: 10px 18px;
+      margin: 10px 0;
+      font-family: var(--inteli-mono, 'Space Mono', monospace);
+      font-size: 0.75em;
+      line-height: 1.6;
+      color: var(--inteli-purple-deep);
+    }
+    .formula-box span.var { color: var(--inteli-coral); font-weight: 700; }
+    .formula-box span.op  { color: var(--inteli-lilac); font-weight: 700; }
+
+    /* Timeline história */
+    .history-timeline {
+      display: flex;
+      gap: 0;
+      margin-top: 10px;
+      position: relative;
+    }
+    .history-timeline::before {
+      content: '';
+      position: absolute;
+      top: 22px;
+      left: 0; right: 0;
+      height: 2px;
+      background: var(--inteli-lilac);
+      z-index: 0;
+    }
+    .timeline-item {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      padding: 0 4px;
+    }
+    .timeline-item .dot {
+      width: 14px; height: 14px;
+      background: var(--inteli-coral);
+      border-radius: 50%;
+      margin: 15px auto 6px;
+      border: 2px solid white;
+      box-shadow: 0 0 0 2px var(--inteli-coral);
+    }
+    .timeline-item .year {
+      font-size: 0.62em;
+      font-weight: 700;
+      color: var(--inteli-purple-deep);
+      font-family: var(--inteli-mono, monospace);
+    }
+    .timeline-item .label {
+      font-size: 0.55em;
+      color: var(--inteli-gray-dark);
+      line-height: 1.3;
+      margin-top: 2px;
+    }
+
+    /* Checklist 5 cards */
+    .checklist-5 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .checklist-5 .card {
+      background: var(--inteli-bg-soft);
+      border-radius: 10px;
+      padding: 10px 12px;
+      border-left: 3px solid var(--inteli-coral);
+    }
+    .checklist-5 .card h4 { font-size: 0.72em; margin: 0 0 2px 0; }
+    .checklist-5 .card p  { font-size: 0.58em; margin: 0; line-height: 1.3; }
+
+    /* Exercise compact */
+    .exercise-slide.compact { padding: 40px 60px 36px 60px; }
+    .exercise-slide.compact h2 { font-size: 1.35em; margin: 0 0 8px 0; }
+    .exercise-slide.compact .exercise-tag { margin-bottom: 8px; }
+    .exercise-slide.compact .exercise-steps li {
+      padding: 7px 10px 7px 46px;
+      margin-bottom: 5px;
+      font-size: 0.66em;
+      line-height: 1.45;
+    }
+    .exercise-slide.compact .exercise-steps li::before {
+      width: 24px; height: 24px;
+      top: 7px; left: 12px;
+      font-size: 0.8em;
+    }
+    .hint-caption {
+      color: var(--inteli-gray-dark);
+      font-size: 0.63em;
+      font-style: italic;
+      margin-top: 8px;
+    }
+
+    /* SVD diagram */
+    .svd-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 10px 0;
+      font-size: 0.72em;
+    }
+    .svd-diagram .matrix-block {
+      background: var(--inteli-bg-soft);
+      border: 2px solid var(--inteli-lilac);
+      border-radius: 8px;
+      padding: 8px 12px;
+      text-align: center;
+      min-width: 80px;
+    }
+    .svd-diagram .matrix-block .mat-name {
+      font-weight: 800;
+      font-size: 1.2em;
+      color: var(--inteli-purple-deep);
+      font-family: var(--inteli-mono, monospace);
+    }
+    .svd-diagram .matrix-block .mat-dim {
+      font-size: 0.72em;
+      color: var(--inteli-gray-dark);
+      margin-top: 2px;
+    }
+    .svd-diagram .matrix-block.highlight { border-color: var(--inteli-coral); background: #fff3f3; }
+    .svd-diagram .op-sign {
+      font-size: 1.6em;
+      color: var(--inteli-lilac);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 01 · Capa ─────────────────────────────────────────────── -->
+      <section class="cover-slide">
+        <div class="top-bar"></div>
+        <div class="cover-content">
+          <span class="sprint-tag">Sprint 1</span>
+          <h1>Filtragem Colaborativa por Usuário</h1>
+          <p class="subtitle">UserKNN e SVD na prática</p>
+          <div class="cover-meta">
+            <strong>Instrução</strong><span>02 de 14</span>
+            <strong>Data</strong><span>27 de abril de 2026 - 14h00 às 16h00</span>
+            <strong>Professor</strong><span>Hermano Peixoto</span>
+            <strong>Módulo</strong><span>06 - Engenharia de Software - Turma 17</span>
+          </div>
+        </div>
+        <span class="cover-branding inteli-wordmark">inteli</span>
+      </section>
+
+      <!-- 02 · Agenda ─────────────────────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Agenda da instrução</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.72em; margin: 0 0 10px;">Vocês leram o artigo de história dos recomendadores, assistiram o vídeo do YouTube sobre filtragem colaborativa, exploraram o tutorial do RealPython e leram o material do DVRC sobre diversidade. A instrução aula conecta esses quatro insumos e termina com vocês rodando UserKNN e SVD no dataset do próprio projeto.</p>
+          <table>
+            <thead>
+              <tr><th style="width: 28%;">Bloco</th><th style="width: 52%;">Atividade</th><th style="width: 20%;">Duração</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>14h00 · Daily</td><td>Stand-up do grupo: o que cada um fez, o que vai fazer, impedimentos</td><td>15 min</td></tr>
+              <tr><td>14h15 · Bloco 1</td><td>Sistemas de recomendação: história, tipos, filtragem colaborativa, esparsidade e cold start</td><td>20 min</td></tr>
+              <tr><td>14h35 · Bloco 2</td><td>UserKNN: similaridade, predição, top-N </br> SVD: fatores latentes, comparação</td><td>30 min</td></tr>
+              <tr><td>15h05 · Dinâmica</td><td>Hands-on: dataset sintético (LLM) → UserKNN → SVD → relatório comparativo</td><td>45 min</td></tr>
+              <tr><td>15h50 · Fechamento</td><td>Quiz e checklist</td><td>10 min</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 02 · Filtragem Colaborativa por Usuário · Sprint 1</div>
+          <div class="footer-page">02</div>
+        </div>
+      </section>
+
+      <!-- 03, Daily Time -->
+      <section class="daily-slide">
+        <span class="daily-tag">Daily, 15 min</span>
+        <h2>Daily Time</h2>
+        <p class="daily-subtitle">
+          Alinhamento rápido de cada grupo: o que avançou desde a última aula, o que trava e qual é a próxima meta.
+        </p>
+        <div class="inteli-timer" data-minutes="15">
+          <div class="inteli-timer-display">15:00</div>
+          <div class="inteli-timer-controls">
+            <button data-action="start">Iniciar</button>
+            <button data-action="pause">Pausar</button>
+            <button data-action="reset">Zerar</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 · Objetivos ─────────────────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Objetivos de aprendizagem</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.72em; margin: 0 0 8px;">No fim da instrução, cada grupo sai com UserKNN e SVD rodando sobre um dataset e com um relatório comparativo escrito.</p>
+          <p style="font-size: 0.72em; margin: 0 0 8px;">Quatro verbos, quatro entregas concretas:</p>
+          <div class="concept-cards">
+            <div class="concept-card">
+              <h4>Descrever</h4>
+              <p>Explicar como a filtragem colaborativa por usuário funciona e por que a matriz usuário-item é a estrutura central, citando exemplos de aplicações reais.</p>
+            </div>
+            <div class="concept-card">
+              <h4>Calcular</h4>
+              <p>Computar similaridade entre usuários usando cosine e Pearson, e aplicar a fórmula de predição ajustada por viés para estimar um rating desconhecido.</p>
+            </div>
+            <div class="concept-card">
+              <h4>Implementar</h4>
+              <p>Escrever UserKNN e SVD em Python a partir de um dataset sintético gerado com LLM, gerando recomendações top-N para um usuário alvo.</p>
+            </div>
+            <div class="concept-card">
+              <h4>Comparar</h4>
+              <p>Avaliar UserKNN e SVD usando RMSE e cobertura, e redigir um relatório com análise crítica de vantagens, limitações e adequação ao contexto do projeto.</p>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 02 · Filtragem Colaborativa por Usuário · Sprint 1</div>
+          <div class="footer-page">03</div>
+        </div>
+      </section>
+
+      <!-- 05 · Ponte com autoestudos ────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O que os autoestudos trouxeram para hoje</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.72em; margin: 0 0 8px;">Quatro materiais, quatro camadas. Cada um cobre um ângulo que a instrução vai pressupor como lido. Se você pulou algum, este slide é o resumo de emergência.</p>
+          <div class="four-cards">
+            <div class="card">
+              <span class="tag">Artigo · arxiv 2209.01860</span>
+              <h4>História dos recomendadores</h4>
+              <p>De Tapestry (1992) ao deep learning, mostra como a filtragem colaborativa evoluiu de vizinhança para fatoração de matriz e depois para embeddings neurais.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-coral);">
+              <span class="tag">Vídeo · YouTube</span>
+              <h4>Como o YouTube recomenda</h4>
+              <p>Watch time como proxy de preferência. Equilíbrio entre interesse do usuário e engajamento da plataforma. Filtragem colaborative implícita em escala bilionária.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-dark-green);">
+              <span class="tag">Tutorial · RealPython</span>
+              <h4>Construindo um recomendador</h4>
+              <p>Matriz usuário-item, sparsity, similaridade, predição, top-N. O tutorial que vai guiar a implementação de hoje.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-purple-deep);">
+              <span class="tag">Material · DVRC 2024</span>
+              <h4>UserKNN, SVD e diversidade</h4>
+              <p>Comparação entre vizinhança e modelo. Métricas de diversidade além do RMSE. A base teórica para o relatório comparativo de hoje.</p>
+            </div>
+          </div>
+          <div class="callout" style="margin-top: 10px; padding: 8px 14px;">
+            <h4 style="margin: 0 0 2px;">Pergunta de partida</h4>
+            <p style="font-size: 0.66em; margin: 0; line-height: 1.4;">Se o YouTube tem bilhões de usuários e milhões de vídeos, a matriz usuário-item teria <strong>bilhões × milhões</strong> de células. Como isso é viável? A resposta está no coração do que vamos discutir hoje. Além disso, discutiremos também onde UserKNN e SVD divergem de forma fundamental.</p>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 02 · Filtragem Colaborativa por Usuário · Sprint 1</div>
+          <div class="footer-page">04</div>
+        </div>
+      </section>
+
+      <!-- 06 · Separador Bloco 1 ──────────────────────────────────── -->
+      <section class="section-slide">
+        <span class="section-number">Bloco 1 · 14h15 · 20 min</span>
+        <h2>Sistemas de recomendação: o problema e a abordagem colaborativa</h2>
+        <p class="section-description">O que são, como surgiram e por que a filtragem colaborativa por usuário foi a primeira grande solução? Quais são seus limites clássicos?</p>
+      </section>
+
+      <!-- 07 · O problema de recomendação ────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>O problema de recomendação: filtrar o relevante em um mar de opções</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.72em; margin: 0 0 8px;">Um sistema de recomendação resolve um problema de sobrecarga de informação: dado um usuário e um catálogo de itens, quais itens têm maior probabilidade de interessar a esse usuário específico? A resposta não é aleatória e não é igual para todos.</p>
+          <div class="history-timeline">
+            <div class="timeline-item">
+              <div class="dot"></div>
+              <div class="year">1992</div>
+              <div class="label">Tapestry<br>1º filtro colaborativo<br>(Xerox PARC)</div>
+            </div>
+            <div class="timeline-item">
+              <div class="dot"></div>
+              <div class="year">1994</div>
+              <div class="label">GroupLens<br>Filtragem colaborativa para Usenet<br>kNN em ratings</div>
+            </div>
+            <div class="timeline-item">
+              <div class="dot" style="background: var(--inteli-lilac); box-shadow: 0 0 0 2px var(--inteli-lilac);"></div>
+              <div class="year">2003</div>
+              <div class="label">Amazon<br>Filtragem Colaborativa Item-to-item <br> em escala industrial</div>
+            </div>
+            <div class="timeline-item">
+              <div class="dot" style="background: var(--inteli-lilac); box-shadow: 0 0 0 2px var(--inteli-lilac);"></div>
+              <div class="year">2006–09</div>
+              <div class="label">Netflix Prize<br>SVD e Matrix<br>Factorization</div>
+            </div>
+            <div class="timeline-item">
+              <div class="dot" style="background: var(--inteli-dark-green); box-shadow: 0 0 0 2px var(--inteli-dark-green);"></div>
+              <div class="year">2016</div>
+              <div class="label">YouTube DNN<br>Deep learning<br>para filtragem colaborativa implícita</div>
+            </div>
+            <div class="timeline-item">
+              <div class="dot" style="background: var(--inteli-dark-green); box-shadow: 0 0 0 2px var(--inteli-dark-green);"></div>
+              <div class="year">2020+</div>
+              <div class="label">LLMs + Filtragem colaborativa<br>Embeddings,<br>causal inference</div>
+            </div>
+          </div>
+          <div class="callout" style="margin-top: 10px; padding: 8px 14px;">
+            <h4 style="margin: 0 0 2px;">Por que a história importa para hoje</h4>
+            <p style="font-size: 0.66em; margin: 0; line-height: 1.4;">O artigo do arxiv que vocês leram mostra que UserKNN é o ponto de partida de toda essa evolução. O que vamos implementar hoje é a mesma lógica do GroupLens de 1994, limpa, interpretável e com RMSE calculável. Entender esse baseline é o que permite julgar criticamente os modelos mais sofisticados que vieram depois.</p>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 02 · Filtragem Colaborativa por Usuário · Sprint 1</div>
+          <div class="footer-page">05</div>
+        </div>
+      </section>
+
+      <!-- 08 · Tipos de filtragem ─────────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Filtragem baseada em conteúdo vs. filtragem colaborativa</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.72em; margin: 0 0 8px;">Dois paradigmas fundamentais, dois tipos de dados necessários. A distinção está na origem da informação usada para recomendar: os atributos do item ou o comportamento coletivo dos usuários.</p>
+          <div class="compare-grid">
+            <div class="compare-col coral">
+              <h4>🏷️ Filtragem Baseada em Conteúdo</h4>
+              <p style="font-size: 0.66em; line-height: 1.45; margin: 0 0 6px;">"Porque você curtiu esse artigo sobre <em>machine learning aplicado à saúde</em>, recomendamos outros sobre <em>deep learning, análise clínica e NLP médico</em>."</p>
+              <ul>
+                <li>Usa atributos dos itens (gênero, tags, descrição, autores)</li>
+                <li>Não precisa de outros usuários para funcionar</li>
+                <li>Tende a recomendar itens muito similares (pouca diversidade)</li>
+                <li>Não captura o gosto implícito coletivo</li>
+              </ul>
+            </div>
+            <div class="compare-col green">
+              <h4>👥 Filtragem Colaborativa</h4>
+              <p style="font-size: 0.66em; line-height: 1.45; margin: 0 0 6px;">"Usuários que tiveram comportamento similar ao seu também interagiram com esses itens, e você ainda não os viu."</p>
+              <ul>
+                <li>Usa o padrão de interações dos usuários (ratings, cliques)</li>
+                <li>Descobre preferências que não estão nos metadados</li>
+                <li>Pode trazer diversidade e surpresas positivas</li>
+                <li>Sofre com cold start: usuário/item novo sem histórico</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout" style="margin-top: 10px; padding: 8px 14px;">
+            <p style="font-size: 0.66em; margin: 0; line-height: 1.4;">Sistemas modernos (Netflix, Spotify) usam abordagens híbridas que combinam os dois paradigmas. Desta forma, entender cada um separadamente é pré-requisito para entender o híbrido. O tutorial do RealPython que vocês leram foca exclusivamente em filtragem colaborativa, que é o foco da instrução de hoje.</p>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 02 · Filtragem Colaborativa por Usuário · Sprint 1</div>
+          <div class="footer-page">06</div>
+        </div>
+      </section>
+
+      <!-- 09 · A matriz usuário-item ──────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>A matriz usuário-item: o coração da filtragem colaborativa</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.72em; margin: 0 0 6px;">Toda filtragem colaborativa começa com a mesma estrutura: uma matriz na qual as linhas representam os usuários, as colunas os itens, e cada célula contém a avaliação (ou ausência dela) que o usuário fez daquele item. O problema de recomendação é essencialmente um problema de completar essa matriz.</p>
+          <div class="code-annot">
+            <pre><code class="language-python"># Exemplo: matriz usuário-item com ratings 1-5
+# NaN = item não avaliado pelo usuário
+
+import pandas as pd
+import numpy as np
+
+data = {
+    'Filme A': [5.0, 4.0, np.nan, 1.0, np.nan],
+    'Filme B': [np.nan, 4.0, 3.0, 2.0, np.nan],
+    'Filme C': [3.0, np.nan, np.nan, 5.0, 4.0],
+    'Filme D': [np.nan, 5.0, 4.0, np.nan, 3.0],
+    'Filme E': [4.0, np.nan, 5.0, np.nan, np.nan],
+}
+index = ['Ana', 'Bruno', 'Carla', 'Diego', 'Eva']
+
+matriz = pd.DataFrame(data, index=index)
+print(matriz)
+
+# Esparsidade
+n = matriz.size
+preenchidos = matriz.notna().sum().sum()
+print(f'\nEsparsidade: {1 - preenchidos/n:.0%}')
+# → Esparsidade: 52%</code></pre>
+            <div class="annot">
+              <p style="font-weight: 700; color: var(--inteli-purple-deep); margin: 0 0 6px;">O que cada parte representa</p>
+              <ol>
+                <li><strong>Linha = usuário:</strong> o vetor de preferências de um usuário é uma linha da matriz. Usuários similares têm linhas similares.</li>
+                <li><strong>Coluna = item:</strong> cada coluna representa um item. Itens populares têm menos NaN.</li>
+                <li><strong>NaN = desconhecido:</strong> não significa que o usuário não gostou; significa que ele ainda não o viu. É o que queremos prever.</li>
+                <li><strong>Esparsidade:</strong> em sistemas reais, 95–99% das células são NaN. Um usuário médio do Netflix avaliou menos de 0,01% do catálogo. Isso é o principal desafio computacional.</li>
+              </ol>
+              <p style="font-size: 0.88em; margin: 6px 0 0;">Ratings explícitos (1–5) são o caso mais simples. Dados implícitos (cliques, tempo) são mais comuns em produção mas mais difíceis de modelar.</p>
+            </div>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 02 · Filtragem Colaborativa por Usuário · Sprint 1</div>
+          <div class="footer-page">07</div>
+        </div>
+      </section>
+
+      <!-- 10 · Esparsidade e cold start ──────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Esparsidade, cold start e escalabilidade: inimigos da filtragem colaborativa</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.72em; margin: 0 0 8px;">Entender esses limites é o que permite escolher a abordagem certa para cada contexto, incluindo o do seu projeto.</p>
+          <div class="three-cards">
+            <div class="card">
+              <h4>🕳️ Esparsidade (Sparsity)</h4>
+              <p>A maioria das células da matriz é NaN. Com poucos ratings compartilhados, a similaridade entre usuários se torna instável, pois dois usuários que avaliaram apenas um item em comum podem parecer muito similares por acidente. Quanto mais esparsa a matriz, menos confiável o UserKNN.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-lilac);">
+              <h4>❄️ Cold Start</h4>
+              <p><span style="color:var(--inteli-coral);">Novo usuário:</span> sem histórico de ratings, não é possível calcular similaridade com pessoa alguma.</p>
+              <p><span style="color:var(--inteli-coral);">Item:</span> sem avaliações, nunca aparece nas recomendações.</p>
+              <p>Esse é o ponto cego de toda filtragem colaborativa pura, e por que sistemas reais combinam filtragem colaborativa com filtragem por conteúdo.</p> 
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-dark-green);">
+              <h4>📐 Escalabilidade</h4>
+              <p>Calcular similaridade entre todos os pares de usuários tem custo O(n²). Com 10 milhões de usuários, isso é inviável em tempo real. SVD e embeddings neurais existem parcialmente por causa desse problema; eles pré-computam representações mais compactas.</p>
+            </div>
+          </div>
+          <div class="callout" style="margin-top: 10px; padding: 8px 14px;">
+            <h4 style="margin: 0 0 2px;">Para o dataset sintético de hoje</h4>
+            <p style="font-size: 0.66em; margin: 0; line-height: 1.4;">No notebook, vocês vão gerar um dataset com ~60% de esparsidade. É suficiente para sentir o problema sem travar o algoritmo. Na dinâmica, peço que reflitam sobre o seguinte: se a esparsidade fosse 95%, o que mudaria nos resultados do UserKNN?</p>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 02 · Filtragem Colaborativa por Usuário · Sprint 1</div>
+          <div class="footer-page">08</div>
+        </div>
+      </section>
+
+      <!-- 11 · Separador Bloco 2 ──────────────────────────────────── -->
+      <section class="section-slide">
+        <span class="section-number">Bloco 2 · 14h35 · 30 min</span>
+        <h2>UserKNN e SVD</h2>
+        <p class="section-description">Como calcular similaridade? Como prever um rating com UserKNN? Como o SVD descobre padrões latentes? Em que esses métodos são diferentes?</p>
+      </section>
+
+      <!-- 12 · Métricas de similaridade ──────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Métricas de similaridade entre usuários</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.72em; margin: 0 0 8px;">A qualidade do UserKNN depende diretamente da métrica de similaridade escolhida. Cada uma tem premissas diferentes sobre o que significa "dois usuários serem parecidos".</p>
+          <table class="sim-table">
+            <thead>
+              <tr>
+                <th style="width: 18%;">Métrica</th>
+                <th style="width: 32%;">Fórmula simplificada</th>
+                <th style="width: 28%;">Quando usar</th>
+                <th style="width: 22%;">Limitação</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Cosseno</strong></td>
+                <td><code>cos(u,v) = (u·v) / (‖u‖·‖v‖)</code><br><span style="font-size:0.85em; color:#888;">trata NaN como 0</span></td>
+                <td>Ratings com escala bem definida. Bom ponto de partida. Padrão do sklearn.</td>
+                <td><span class="badge ok">Médio</span> Ignora viés de usuário (quem sempre dá 5 vs. quem dá 3 para o mesmo nível de gosto)</td>
+              </tr>
+              <tr>
+                <td><strong>Pearson</strong></td>
+                <td><code>corr(u,v) = cov(u,v) / (σu·σv)</code><br><span style="font-size:0.85em; color:#888;">apenas itens co-avaliados</span></td>
+                <td>Melhor para ratings explícitos. Remove viés de escala (normaliza pela média).</td>
+                <td><span class="badge limit">Sensível</span> Instável com poucos itens em comum; correlação espúria com apenas 2–3 ratings sobrepostos</td>
+              </tr>
+              <tr>
+                <td><strong>Jaccard</strong></td>
+                <td><code>J(u,v) = |A∩B| / |A∪B|</code><br><span style="font-size:0.85em; color:#888;">conjuntos de itens avaliados</span></td>
+                <td>Dados implícitos (binários: avaliou ou não). Ignora o valor do rating.</td>
+                <td><span class="badge ok">Simples</span> Descarta a magnitude dos ratings; não distingue 1 estrela de 5 estrelas</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 02 · Filtragem Colaborativa por Usuário · Sprint 1</div>
+          <div class="footer-page">09</div>
+        </div>
+      </section>
+
+      <!-- 13 · UserKNN: fórmula e pipeline ───────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>UserKNN: do vizinho ao rating previsto</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.70em; margin: 0 0 6px;">O pipeline completo em quatro passos. A fórmula de predição com ajuste de viés é o coração do algoritmo. É o que diferencia um recomendador ingênuo de um que lida com usuários que tendem a dar notas altas ou baixas sistematicamente.</p>
+          <div class="pipeline-stages" style="margin-top: 8px;">
+            <div class="stage" style="background: #f0f4ff;">
+              <span class="stage-tag">Passo 1</span>
+              <h4>Similaridade</h4>
+              <p>Calcule sim(u, v) para todos os pares. Resultado: matriz n×n de similaridades.</p>
+            </div>
+            <div class="stage" style="background: #f0f4ff;">
+              <span class="stage-tag">Passo 2</span>
+              <h4>Vizinhos</h4>
+              <p>Para o usuário-alvo u, encontre os k mais similares que avaliaram o item i.</p>
+            </div>
+            <div class="stage" style="background: #fff3d4;">
+              <span class="stage-tag">Passo 3 · core</span>
+              <h4>Predição</h4>
+              <p>Média ponderada dos ratings dos vizinhos, ajustada pelo viés de cada um.</p>
+            </div>
+            <div class="stage" style="background: #e8f5ee;">
+              <span class="stage-tag">Passo 4</span>
+              <h4>Top-N</h4>
+              <p>Preveja ratings para todos os itens não avaliados. Retorne os N maiores.</p>
+            </div>
+          </div>
+          <div class="formula-box" style="margin-top: 12px;">
+            <span class="var">r̂(u,i)</span> <span class="op">=</span> <span class="var">r̄_u</span> <span class="op">+</span>
+            &nbsp;
+            <span class="op">Σ</span><sub style="font-size:0.7em;">v ∈ N(u)</sub>&nbsp;
+            [&nbsp;<span class="var">sim(u,v)</span> <span class="op">·</span> (<span class="var">r(v,i)</span> <span class="op">−</span> <span class="var">r̄_v</span>)&nbsp;]
+            &nbsp;<span class="op">/</span>&nbsp;
+            <span class="op">Σ</span><sub style="font-size:0.7em;">v ∈ N(u)</sub>&nbsp;|<span class="var">sim(u,v)</span>|
+          </div>
+          <p style="font-size: 0.62em; margin: 4px 0 0; color: var(--inteli-gray-dark); line-height: 1.5;">
+            <strong>r̄_u</strong> = média dos ratings do usuário-alvo </br>
+            <strong>r̄_v</strong> = média dos ratings do vizinho v </br>
+            <strong>N(u)</strong> = conjunto dos k vizinhos mais similares que avaliaram i </br>
+            O ajuste <strong>(r(v,i) − r̄_v)</strong> remove o viés: se um vizinho sempre dá notas altas, desconta-se essa tendência.
+          </p>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 02 · Filtragem Colaborativa por Usuário · Sprint 1</div>
+          <div class="footer-page">10</div>
+        </div>
+      </section>
+
+      <!-- 14 · SVD: fatoração de matriz ──────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>SVD: descobrindo padrões que não estão escritos nos dados</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.72em; margin: 0 0 8px;">Em vez de perguntar "quem é parecido com você?", o SVD pergunta "quais fatores ocultos explicam todos os ratings observados?". Esses fatores são os <strong>fatores latentes</strong> — dimensões abstratas que capturam preferências que ninguém nomeou.</p>
+          <div class="svd-diagram">
+            <div class="matrix-block highlight">
+              <div class="mat-name">R</div>
+              <div class="mat-dim">n usuários × m itens</div>
+              <div style="font-size: 0.65em; color: #888; margin-top: 4px;">Matriz esparsa original</div>
+            </div>
+            <div class="op-sign">≈</div>
+            <div class="matrix-block">
+              <div class="mat-name">U</div>
+              <div class="mat-dim">n × d</div>
+              <div style="font-size: 0.65em; color: #888; margin-top: 4px;">Perfis de usuários</div>
+            </div>
+            <div class="op-sign">·</div>
+            <div class="matrix-block">
+              <div class="mat-name">Σ</div>
+              <div class="mat-dim">d × d</div>
+              <div style="font-size: 0.65em; color: #888; margin-top: 4px;">Importância dos fatores</div>
+            </div>
+            <div class="op-sign">·</div>
+            <div class="matrix-block">
+              <div class="mat-name">Vᵀ</div>
+              <div class="mat-dim">d × m</div>
+              <div style="font-size: 0.65em; color: #888; margin-top: 4px;">Perfis de itens</div>
+            </div>
+          </div>
+          <div class="compare-grid" style="margin-top: 10px;">
+            <div class="compare-col">
+              <h4>O que são os fatores latentes?</h4>
+              <p style="font-size: 0.64em; line-height: 1.45; margin: 0;">São dimensões abstratas que o algoritmo descobre sozinho nos dados. Para filmes: podem capturar "filme de ação vs. drama", "produção de Hollywood vs. cinema independente", "anos 80 vs. contemporâneo". Você não define os fatores — o SVD os infere. O predito r̂(u,i) = U[u] · Vᵀ[:, i] é o produto interno dos vetores latentes.</p>
+            </div>
+            <div class="compare-col green">
+              <h4>Por que truncar (TruncatedSVD)?</h4>
+              <p style="font-size: 0.64em; line-height: 1.45; margin: 0;">A decomposição completa de R tem tantos fatores quanto a menor dimensão da matriz. A maioria carrega ruído. Com d fatores (d = 10–50 é comum), capturamos os padrões principais e ignoramos o ruído. Isso funciona como uma regularização implícita, reduzindo o overfitting à esparsidade.</p>
+            </div>
+          </div>
+          <div class="callout" style="margin-top: 8px; padding: 8px 14px;">
+            <h4 style="margin: 0 0 2px;">NaN antes do SVD</h4>
+            <p style="font-size: 0.66em; margin: 0; line-height: 1.4;">SVD não aceita NaN. A estratégia mais simples: preencher com a média do usuário antes de decompor. Alternativas mais sofisticadas (como o SVD++ do Netflix Prize) aprendem a preencher os valores como parte do treinamento.</p>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 02 · Filtragem Colaborativa por Usuário · Sprint 1</div>
+          <div class="footer-page">11</div>
+        </div>
+      </section>
+
+      <!-- 15 · UserKNN vs SVD ─────────────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>UserKNN vs. SVD: quando usar cada um</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.72em; margin: 0 0 8px;">Nenhum dos dois é universalmente melhor. A escolha depende do tamanho do dataset, da importância de interpretabilidade, da esparsidade e do contexto do negócio. Isso é o que vocês vão verificar empiricamente no notebook de hoje.</p>
+          <table class="sim-table">
+            <thead>
+              <tr>
+                <th style="width: 22%;">Critério</th>
+                <th style="width: 39%;">UserKNN</th>
+                <th style="width: 39%;">SVD</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Interpretabilidade</strong></td>
+                <td><span class="badge good">Alta</span> "Você e Ana avaliaram 8 itens em comum e têm 0.87 de similaridade"</td>
+                <td><span class="badge limit">Baixa</span> Fatores latentes não têm nome nem interpretação direta</td>
+              </tr>
+              <tr>
+                <td><strong>Esparsidade</strong></td>
+                <td><span class="badge limit">Sensível</span> Com &gt; 95% esparso, poucos vizinhos úteis; predições instáveis</td>
+                <td><span class="badge good">Robusto</span> SVD lida bem com esparsidade — é justamente onde brilha</td>
+              </tr>
+              <tr>
+                <td><strong>Escalabilidade</strong></td>
+                <td><span class="badge limit">Limitado</span> O(n²) para similaridade. Inviável &gt; 100k usuários sem aproximações</td>
+                <td><span class="badge good">Escalável</span> TruncatedSVD é eficiente; retreinamento periódico, não em tempo real</td>
+              </tr>
+              <tr>
+                <td><strong>Cold Start</strong></td>
+                <td><span class="badge limit">Problema</span> Usuário novo sem ratings → sem vizinhos → sem recomendação</td>
+                <td><span class="badge limit">Problema</span> Igualmente afetado; novo usuário não está na decomposição</td>
+              </tr>
+              <tr>
+                <td><strong>RMSE típico</strong></td>
+                <td><span class="badge ok">Moderado</span> Melhor em datasets densos e domínios de nicho</td>
+                <td><span class="badge good">Melhor</span> Geralmente supera UserKNN em datasets esparsos e grandes</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 02 · Filtragem Colaborativa por Usuário · Sprint 1</div>
+          <div class="footer-page">12</div>
+        </div>
+      </section>
+
+      <!-- 16 · Separador Dinâmica ─────────────────────────────────── -->
+      <section class="section-slide">
+        <span class="section-number">Dinâmica · 15h05 · 45 min</span>
+        <h2>Hands-on: do dataset sintético ao relatório comparativo</h2>
+      </section>
+
+      <!-- 17 · Exercício ──────────────────────────────────────────── -->
+      <section class="exercise-slide compact">
+        <div class="top-bar"></div>
+        <span class="exercise-tag">Dinâmica · em grupo · 45 min</span>
+        <h2>Dataset → UserKNN → SVD → relatório</h2>
+        <ol class="exercise-steps">
+          <li><strong><span style="color:var(--inteli-coral);">Defina o dataset do seu grupo:</span></strong> preencham o Passo 1 do notebook template. Escrevam no Markdown antes de qualquer código.</li>
+          <li><strong><span style="color:var(--inteli-coral);">Gerem dados sintéticos com uma LLM:</span></strong> usem o prompt sugerido no Passo 2 do notebook.</li>
+          <li><strong><span style="color:var(--inteli-coral);">Implementem UserKNN e SVD:</span></strong> sigam os Passos 4, 5 e 6 do notebook. Usem <code>cosine_similarity</code> do sklearn para UserKNN e <code>TruncatedSVD</code> para o SVD. Gerem as top-5 recomendações para pelo menos um usuário com cada algoritmo.</li>
+          <li><strong><span style="color:var(--inteli-coral);">Avaliem e escrevam o relatório:</span></strong> calculem o RMSE de ambos os modelos no conjunto de teste e comparem side-by-side as recomendações geradas. Preencham os campos do Passo 8 do notebook.</li>
+        </ol>
+        <p class="hint-caption" style="color: rgba(255,255,255,0.75); margin-top: 12px;">Se o dataset tiver esparsidade muito alta (&gt; 80%) o UserKNN pode não encontrar vizinhos suficientes. Nesse caso, reduza k para 3 ou aumente o número de avaliações no dataset sintético. No SVD, se a variância explicada pelos d fatores for menor que 50%, reduza d para n_usuarios − 1.</p>
+      </section>
+
+      <!-- 18 · Debrief ────────────────────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Debrief: o que costuma aparecer na primeira implementação</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.74em; margin: 0 0 8px;">Três padrões que aparecem em toda turma que implementa UserKNN e SVD pela primeira vez em dados próprios.</p>
+          <div class="three-cards">
+            <div class="card">
+              <h4>1 · RMSE do UserKNN altíssimo</h4>
+              <p>Causa mais comum: esparsidade muito alta no dataset, com poucos itens co-avaliados entre vizinhos. A predição acaba usando a média do usuário-alvo sem contribuição real dos vizinhos. Solução: gere mais avaliações no dataset ou reduza k.</p>
+            </div>
+            <div class="card">
+              <h4>2 · SVD e UserKNN recomendam os mesmos itens</h4>
+              <p>Sinal de que o dataset tem pouca variação — os perfis de usuário gerados pela LLM são homogêneos demais. Peça à LLM para injetar mais diversidade nos perfis. Quando funcionar direito, os dois algoritmos devem ter overlap parcial, não total.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-dark-green);">
+              <h4>3 · SVD com variância &lt; 40%</h4>
+              <p>O dataset não tem estrutura latente suficiente para o SVD capturar. Pode ser dataset pequeno ou muito esparso. Reduza d (número de fatores) para min(n_usuários, n_itens) − 1 e verifique se o gráfico de variância acumulada tem cotovelo visível.</p>
+            </div>
+          </div>
+          <div class="callout" style="margin-top: 10px; padding: 8px 14px;">
+            <h4 style="margin: 0 0 2px;">A pergunta certa para o relatório</h4>
+            <p style="font-size: 0.66em; margin: 0; line-height: 1.4;">Não é "qual algoritmo tem menor RMSE?", e sim "qual algoritmo faz mais sentido <em>para o contexto do projeto</em>?" Um RMSE 0.02 melhor não justifica perder interpretabilidade se os stakeholders precisam entender o porquê da recomendação. Isso é o que separa um bom relatório de uma lista de métricas.</p>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 02 · Filtragem Colaborativa por Usuário · Sprint 1</div>
+          <div class="footer-page">14</div>
+        </div>
+      </section>
+
+      <!-- 19 · Separador Fechamento ───────────────────────────────── -->
+      <section class="section-slide">
+        <span class="section-number">Fechamento · 15h50 · 10 min</span>
+        <h2>Quiz e checklist</h2>
+      </section>
+
+      <!-- 20 · Quiz 1 ─────────────────────────────────────────────── -->
+      <section class="quiz-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Checagem 1 de 2 · Similaridade e viés</h2>
+        </div>
+        <div class="quiz-container">
+          <p class="quiz-question">Ana sempre dá notas entre 4 e 5. Bruno sempre dá notas entre 1 e 2. Ambos deram as mesmas notas relativas para os filmes que assistiram juntos — ou seja, quando Ana dá 5, Bruno dá 2; quando Ana dá 4, Bruno dá 1. Qual métrica de similaridade captaria melhor essa afinidade de preferência?</p>
+          <ul class="quiz-options">
+            <li data-correct="false">Similaridade do cosseno, pois compara os vetores de ratings diretamente sem normalização</li>
+            <li data-correct="true">Correlação de Pearson, pois normaliza os ratings pela média de cada usuário e detecta a relação linear entre as avaliações</li>
+            <li data-correct="false">Índice de Jaccard, pois considera apenas se os usuários avaliaram os mesmos itens, independentemente das notas</li>
+            <li data-correct="false">Distância euclidiana, pois mede a diferença absoluta entre as notas de cada item</li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Exato. Pearson subtrai a média de cada usuário antes de calcular a correlação. Ana (média 4.5) e Bruno (média 1.5) — após subtração de média, ambos ficam com o mesmo padrão de variação. Cosseno trataria os vetores brutos (4,5 vs 1,2) como muito diferentes."
+               data-incorrect-msg="Reveja. O problema de Ana e Bruno é o viés de escala: ela usa a parte alta da escala, ele a parte baixa, mas as preferências relativas são as mesmas. Pearson normaliza pela média de cada usuário — é exatamente o que a fórmula do UserKNN com ajuste de viés (r − r̄_v) implementa."></div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 02 · Filtragem Colaborativa por Usuário · Sprint 1</div>
+          <div class="footer-page">15</div>
+        </div>
+      </section>
+
+      <!-- 21 · Quiz 2 ─────────────────────────────────────────────── -->
+      <section class="quiz-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Checagem 2 de 2 · UserKNN vs. SVD na prática</h2>
+        </div>
+        <div class="quiz-container">
+          <p class="quiz-question">Um sistema de recomendação médica sugere artigos científicos para pesquisadores. O dataset tem 500 pesquisadores, 2.000 artigos e 98% de esparsidade. Os gestores de saúde precisam entender <em>por que</em> um artigo foi recomendado para cada pesquisador. Qual abordagem é mais adequada nesse contexto?</p>
+          <ul class="quiz-options">
+            <li data-correct="false">SVD com 50 fatores latentes, pois lida melhor com alta esparsidade e terá RMSE menor</li>
+            <li data-correct="false">SVD com 5 fatores latentes, pois a baixa dimensionalidade tornará os fatores interpretáveis</li>
+            <li data-correct="true">UserKNN com k pequeno e Pearson, pois a explicação "pesquisadores com perfil similar a você também leram estes artigos" é auditável e compreensível pelos gestores</li>
+            <li data-correct="false">Nenhum dos dois, pois 98% de esparsidade invalida qualquer filtragem colaborativa</li>
+          </ul>
+          <div class="quiz-feedback"
+               data-correct-msg="Correto. Com 98% de esparsidade, nenhum dos dois vai ter RMSE excelente — mas interpretabilidade é o requisito dominante aqui. UserKNN permite explicar: 'este artigo foi recomendado porque os pesquisadores X, Y e Z — que têm perfil similar ao seu — o avaliaram com nota alta'. SVD não tem como produzir essa explicação."
+               data-incorrect-msg="Reveja. A esparsidade alta é um problema real, mas não elimina a filtragem colaborativa — apenas a torna menos precisa. O critério decisivo aqui é interpretabilidade: os gestores precisam auditar as recomendações. SVD, com fatores latentes sem nome, falha nesse requisito mesmo com RMSE menor."></div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 02 · Filtragem Colaborativa por Usuário · Sprint 1</div>
+          <div class="footer-page">16</div>
+        </div>
+      </section>
+
+      <!-- 22 · Checklist ──────────────────────────────────────────── -->
+      <section class="content-slide">
+        <div class="top-bar"></div>
+        <span class="inteli-logo-header inteli-wordmark">inteli</span>
+        <div class="slide-title-area">
+          <div class="accent-bar"></div>
+          <h2>Checklist de hoje: o que um recomendador mínimo tem</h2>
+        </div>
+        <div class="slide-body">
+          <p style="font-size: 0.74em; margin: 0 0 8px;">Cinco critérios para avaliar se o notebook do grupo está pronto para entrega. Não precisa estar tudo verde hoje, mas cada item em aberto precisa de uma justificativa explícita no relatório.</p>
+          <div class="checklist-5">
+            <div class="card">
+              <h4>1 · Dataset definido</h4>
+              <p>Contexto do projeto documentado no Passo 1 do notebook. Usuários, itens e escala de avaliação claramente descritos.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-lilac);">
+              <h4>2 · Matriz usuário-item</h4>
+              <p>Pivot table criada corretamente com NaN onde não há avaliação. Esparsidade calculada e reportada.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-dark-green);">
+              <h4>3 · UserKNN rodando</h4>
+              <p>Similaridade calculada, predição com ajuste de viés implementada, top-5 recomendações geradas para pelo menos um usuário.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-coral);">
+              <h4>4 · SVD rodando</h4>
+              <p>TruncatedSVD treinado, matriz reconstruída, RMSE calculado no conjunto de teste, top-5 recomendações geradas.</p>
+            </div>
+            <div class="card" style="border-left-color: var(--inteli-purple-deep);">
+              <h4>5 · Relatório escrito</h4>
+              <p>Passo 8 do notebook preenchido: análise qualitativa, tabela de métricas, vantagens e limitações de cada abordagem, conclusão fundamentada.</p>
+            </div>
+          </div>
+          <div class="callout" style="margin-top: 10px; padding: 8px 14px;">
+            <h4 style="margin: 0 0 2px;">Entrega</h4>
+            <p style="font-size: 0.66em; margin: 0; line-height: 1.4;">Link para o notebook + print da tabela comparativa de RMSE + uma frase respondendo: "Para o contexto do nosso projeto, qual algoritmo escolheríamos em produção e por quê?"</p>
+          </div>
+        </div>
+        <div class="slide-footer">
+          <div class="footer-bar">Instrução 02 · Filtragem Colaborativa por Usuário · Sprint 1</div>
+          <div class="footer-page">17</div>
+        </div>
+      </section>
+
+      <!-- 23 · Encerramento ───────────────────────────────────────── -->
+      <section class="end-slide">
+        <span class="inteli-wordmark light">inteli</span>
+        <h2>Até a próxima</h2>
+        <p>Aula 03 · Projeto de Software orientado a objetos: conceito de entidades, propriedades, separação de contextos e diagrama UML de classes</p>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="assets/js/inteli-quiz.js"></script>
+  <script src="assets/js/inteli-zoom.js"></script>
+  <script src="assets/js/inteli-timer.js"></script>
+  <script src="assets/js/inteli-pdf-export.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: false,
+      width: 1280,
+      height: 720,
+      margin: 0,
+      transition: 'slide',
+      plugins: [RevealHighlight]
+    });
+  </script>
+</body>
+</html>

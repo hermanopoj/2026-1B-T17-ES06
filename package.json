@@ -1,0 +1,33 @@
+{
+  "name": "2026-1b-t17-es06",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"No tests configured\"",
+    "prepare": "husky",
+    "lint": "prettier --check \"**/*.{md,yml,yaml,json}\"",
+    "format": "prettier --write \"**/*.{md,yml,yaml,json}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hermanopoj/2026-1B-T17-ES06.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/hermanopoj/2026-1B-T17-ES06/issues"
+  },
+  "homepage": "https://github.com/hermanopoj/2026-1B-T17-ES06#readme",
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.8.3"
+  },
+  "private": true,
+  "lint-staged": {
+    "*.{md,yml,yaml,json}": "prettier --check"
+  }
+}
